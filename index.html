@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Page - Regular</title>
+    <script src="lib/require.js"></script>
+</head>
+<body>
+    <h1>Test Page</h1>
+    
+<script>
+require.config({
+    baseUrl: "/",
+    paths: {
+        "jquery": "lib/jquery",
+        "backbone": "lib/backbone",
+        "underscore": "lib/underscore",
+        "underscore.nest": "lib/underscore.nest"
+    },
+    shim: {
+        "jquery": {
+            exports: "$",
+        },
+        "backbone": {
+            deps: ["jquery", "underscore"],
+            exports: 'Backbone'
+        },
+        "underscore": {
+            exports: "_"
+        },
+        "underscore.nest": {
+            deps: ["underscore"],
+            imports: ["_"],
+            exports: "_.nest"
+        }
+    }
+});
+
+require(["js/module1"], function(module1) {
+    console.log(module1);
+});
+</script>
+    
+</body>
+</html>

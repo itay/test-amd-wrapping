@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Page - Regular</title>
+    <script src="lib/require.js"></script>
+</head>
+<body>
+    <h1>Test Page</h1>
+    
+<script>
+require.config({
+    baseUrl: "/",
+    paths: {
+        "jquery": "lib-wrapped/jquery",
+        "backbone": "lib-wrapped/backbone",
+        "underscore": "lib-wrapped/underscore",
+        "underscore.nest": "lib-wrapped/underscore.nest"
+    }
+});
+
+require(["js/module1"], function(module1) {
+    console.log(module1);
+});
+</script>
+    
+</body>
+</html>
