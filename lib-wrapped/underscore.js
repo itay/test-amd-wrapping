@@ -1,7 +1,4 @@
-(function(global){
-
 define("underscore", [], function() { 
-    
     // ---------------------------------------------
     // --------------- ORIGINAL CODE ---------------
     // ---------------------------------------------
@@ -1292,13 +1289,8 @@ define("underscore", [], function() {
 
 
 
-    
-        var ret, fn;
-                fn = function () {
+    var fn = function () {
                 return _.noConflict();
             };
-        ret = fn.apply(global, arguments);
-                        return ret || global._;
-        
-    });
-})(this);
+    return fn.apply(this, arguments);
+});

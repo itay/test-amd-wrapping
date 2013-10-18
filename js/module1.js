@@ -5,7 +5,7 @@ define(function(require, exports, module) {
     var nester = require("underscore.nest");
     
     return {
-        nester: nester.version,
+        nester: !!nester,
         jquery: $.fn.jquery,
         underscore: _.VERSION,
         backbone: Backbone.VERSION

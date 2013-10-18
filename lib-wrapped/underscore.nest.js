@@ -1,12 +1,6 @@
-(function(global){
-
 define("underscore.nest", ["underscore"], function(_) { 
-    
-        var _window = (function () {
-                return {_: _};  
-            }).call(this);
+    var __sandbox = { _: _ };
     (function(window){
-    
     // ---------------------------------------------
     // --------------- ORIGINAL CODE ---------------
     // ---------------------------------------------
@@ -109,16 +103,7 @@ define("underscore.nest", ["underscore"], function(_) {
 
 
 
-    
-    }).call(_window, _window);
-     global._.nest = _window._.nest; 
-    
-        var ret, fn;
-                fn = function (_) {
-                return _.nest;
-            };
-        ret = fn.apply(global, arguments);
-                        return ret || global._.nest;
-        
-    });
-})(this);
+    }).call(__sandbox, __sandbox);
+
+    return __sandbox._.nest;
+});

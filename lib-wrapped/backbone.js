@@ -1,12 +1,6 @@
-(function(global){
-
 define("backbone", ["jquery","underscore"], function($, _) { 
-    
-        var _window = (function () {
-                return {$: $, jQuery: $, _: _};
-            }).call(this);
+    var __sandbox = {$: $, jQuery: $, _: _};
     (function(window){
-    
     // ---------------------------------------------
     // --------------- ORIGINAL CODE ---------------
     // ---------------------------------------------
@@ -1602,12 +1596,9 @@ define("backbone", ["jquery","underscore"], function($, _) {
 
 
 
-    
-    }).call(_window, _window);
-     global.Backbone = _window.Backbone; 
-    
-        var ret, fn;
-                fn = function ($, _) {
+    }).call(__sandbox, __sandbox);
+
+    var fn = function ($, _) {
                 if(this.Backbone.hasOwnProperty('setDomLibrary')) {
                     this.Backbone.setDomLibrary($);
                 }
@@ -1616,8 +1607,5 @@ define("backbone", ["jquery","underscore"], function($, _) {
                 }
                 return this.Backbone.noConflict();
             };
-        ret = fn.apply(global, arguments);
-                        return ret || global.Backbone;
-        
-    });
-})(this);
+    return fn.apply(__sandbox, arguments);
+});

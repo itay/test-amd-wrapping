@@ -1,7 +1,4 @@
-(function(global){
-
 define("jquery", [], function() { 
-    
     // ---------------------------------------------
     // --------------- ORIGINAL CODE ---------------
     // ---------------------------------------------
@@ -9457,13 +9454,8 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
 
 
-    
-        var ret, fn;
-                fn = function () {
+    var fn = function () {
                 return jQuery.noConflict();
             };
-        ret = fn.apply(global, arguments);
-                        return ret || global.$;
-        
-    });
-})(this);
+    return fn.apply(this, arguments);
+});

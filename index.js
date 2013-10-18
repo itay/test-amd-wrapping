@@ -24,9 +24,7 @@ var config = {
             deps: ["jquery", "underscore"],
             imports: ["$", "_"],
             exports: 'Backbone',
-            preinit: function() {
-                return {$: $, jQuery: $, _: _};
-            },
+            sandbox: '{$: $, jQuery: $, _: _}', // Create a sandbox to simulate the global/window scope
             init: function($, _) {
                 if(this.Backbone.hasOwnProperty('setDomLibrary')) {
                     this.Backbone.setDomLibrary($);
@@ -46,25 +44,23 @@ var config = {
         "underscore.nest": {
             deps: ["underscore"],
             imports: ["_"],
-            exports: "_.nest",
-            preinit: function() {
-                return {_: _};  
-            },
-            init: function(_) {
-                return _.nest;
-            }
+            sandbox: '{ _: _ }',
+            exports: "_.nest"
         }
     }
 };
 
 requirejs.config(config);
 
-var template = '(function(global){\n\n'
+var template = ''
     + 'define("<%= name %>", <%= JSON.stringify(deps || []) %>, function(<%= imports.join(", ") %>) { \n'
-    + '    <% if(preinit){ %>\n'
-    + '        var _window = (<%= preinit %>).call(this);\n'
+    + '<% if (preinit) { %>'
+    + '    <%= preinit %>\n'
+    + '<% } %>'
+    + '<% if (sandbox) { %>'
+    + '    var __sandbox = <%= sandbox %>;\n'
     + '    (function(window){\n'
-    + '    <% } %>\n'
+    + '<% } %>'
     + '    // ---------------------------------------------\n'
     + '    // --------------- ORIGINAL CODE ---------------\n'
     + '    // ---------------------------------------------\n\n\n\n'
@@ -72,22 +68,18 @@ var template = '(function(global){\n\n'
     + '    // ---------------------------------------------\n'
     + '    // --------------- AUTOGEN  CODE ---------------\n'
     + '    // ---------------------------------------------\n\n\n\n'
-    + '    <% if(preinit){ %>\n'
-    + '    }).call(_window, _window);\n'
-    + '    <% if(exports){ %> global.<%= exports %> = _window.<%= exports %>; <% } %>\n'
-    + '    <% } %>\n'
-    + '        var ret, fn;\n'
-    + '        <% if (init) { %>'
-    + '        fn = <%= init.toString() %>;\n'
-    + '        ret = fn.apply(global, arguments);\n'
-    + '        <% } %>'
-    + '        <% if (exports) { %>'
-    + '        return ret || global.<%= exports %>;\n'
-    + '        <% } else { %>'
-    + '        return ret;\n'
-    + '        <% } %>\n'
-    + '    });\n'
-    + '})(this);'
+    + '<% if (sandbox) { %>'
+    + '    }).call(__sandbox, __sandbox);\n\n'
+    + '<% } %>'
+    + '<% if (init) { %>'
+    + '    var fn = <%= init.toString() %>;\n'
+    + '    return fn.apply(<%= sandbox ? "__sandbox" : "this" %>, arguments);\n'
+    + '<% } else { %>'
+    + '<% if (exports) { %>'
+    + '    return <%= sandbox ? "__sandbox." + exports : exports %>;\n'
+    + '<% } %>'
+    + '<% } %>'
+    + '});'
  
 _.each(config.shim, function(shim, name) {
     var resolvedPath = requirejs.toUrl(name + ".js");
@@ -99,7 +91,7 @@ _.each(config.shim, function(shim, name) {
     var relativePath = path.relative(config.baseUrl, resolvedPath);
     var outPath = path.join(config.dir, path.basename(relativePath));
     var code = fs.readFileSync(resolvedPath);
-    var shim = _.extend({name: name, code: code, deps: [], init: null, exports: null, imports: [], preinit: null}, config.shim[name]);
+    var shim = _.extend({name: name, code: code, deps: [], init: null, exports: null, imports: [], preinit: null, sandbox: null}, config.shim[name]);
     
     var wrappedCode = _.template(template, shim);
     fs.writeFileSync(outPath, wrappedCode);
